@@ -1,7 +1,11 @@
 package com.example.a3.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class MateriaPrima {
@@ -15,6 +19,11 @@ public class MateriaPrima {
 
     @Column
     Integer quantidade;
+
+    @OneToMany(mappedBy = "materiaPrima")
+    @JsonIgnore
+    private Set<Insumo> insumo;
+
 
     public Integer getId() {
         return id;
@@ -38,6 +47,14 @@ public class MateriaPrima {
 
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public Set<Insumo> getInsumo() {
+        return insumo;
+    }
+
+    public void setInsumo(Set<Insumo> insumo) {
+        this.insumo = insumo;
     }
 
     @Override

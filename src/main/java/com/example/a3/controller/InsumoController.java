@@ -3,6 +3,7 @@ package com.example.a3.controller;
 
 import com.example.a3.domain.Insumo;
 import com.example.a3.domain.Produto;
+import com.example.a3.model.RelatorioModel;
 import com.example.a3.services.InsumoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class InsumoController {
         return insumoService.altera(id, insumo);
     }
     @GetMapping("/rel")
-    public String relatorio(){
+    public List<RelatorioModel> relatorio(){
         return insumoService.relatorio();
     }
 

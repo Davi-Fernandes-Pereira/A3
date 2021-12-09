@@ -11,9 +11,11 @@ public class Insumo {
     private Integer id;
 
     @ManyToOne
+    @JoinColumn(name = "produto_id")
     private Produto produto;
 
     @ManyToOne
+    @JoinColumn(name = "materia_prima_id")
     private MateriaPrima materiaPrima;
 
     @Column

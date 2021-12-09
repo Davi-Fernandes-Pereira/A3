@@ -4,12 +4,13 @@ package com.example.a3.services;
 import com.example.a3.domain.Insumo;
 import com.example.a3.domain.MateriaPrima;
 import com.example.a3.domain.Produto;
+import com.example.a3.model.RelatorioModel;
 import com.example.a3.repository.InsumoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class InsumoService {
@@ -70,18 +71,29 @@ public class InsumoService {
         return this.salvar(insumo1);
     }
 
-    public String relatorio() {
-
-        String relatorio = "";
-
+    public List<RelatorioModel> relatorio() {
+        List<RelatorioModel> relatorio = new ArrayList<>();
         for (Produto produto : produtoService.buscaTodos()) {
-            for (Insumo insumo : buscaTodos()) {
+            Integer qtdProduzivelInsumo = 1000000000;
 
-
-
-
+            for (Insumo insumo : produto.getInsumos()) {
+                if (qtdProduzivelInsumo > insumo.getMateriaPrima().getQuantidade() / insumo.getQuantidadeNecessaria()) {
+                    qtdProduzivelInsumo = insumo.getMateriaPrima().getQuantidade() / insumo.getQuantidadeNecessaria();
+                }
             }
+
+            atualizarMateriaPrima(produto, qtdProduzivelInsumo);
+            relatorio.add(new RelatorioModel(produto.getNome(), qtdProduzivelInsumo));
         }
         return relatorio;
+    }
+
+    public void atualizarMateriaPrima(Produto produto, Integer qtdProduzida) {
+        for (Insumo insumo : produto.getInsumos()) {
+            Integer materiaSobra = insumo.getMateriaPrima().getQuantidade() - (qtdProduzida * insumo.getQuantidadeNecessaria());
+            MateriaPrima materiaPrima = insumo.getMateriaPrima();
+            materiaPrima.setQuantidade(materiaSobra);
+            materiaPrimaService.altera(materiaPrima.getId(), materiaPrima);
+        }
     }
 }
